@@ -1,0 +1,26 @@
+{
+  "name": "portscale-reconcile-serverless",
+  "version": "1.0.0",
+  "description": "Serverless edge platform for automated weighbridge reconciliation, port dispatch allocation, and industrial inventory audit.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test dist/**/*.test.js || tsc && node --test",
+    "generate:data": "node scripts/generate-mock-data.js"
+  },
+  "keywords": [
+    "cloudflare-workers",
+    "serverless",
+    "edge-computing",
+    "logistics",
+    "weighbridge",
+    "inventory-reconciliation",
+    "typescript"
+  ],
+  "author": "Wenderson Werneck",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.11.0"
+  }
+}

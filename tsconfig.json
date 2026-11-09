@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "typeRoots": [
+      "C:/Users/Wenderson/Desktop/Projetos/Cometa_Expedicao_MVP/node_modules/@types",
+      "./node_modules/@types"
+    ]
+  },
+  "include": ["src/**/*"]
+}
