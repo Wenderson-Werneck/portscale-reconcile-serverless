@@ -104,3 +104,50 @@ test("IndustrialInventoryLedger: enforces strict non-negative state transitions"
     });
   }, /INSUFFICIENT_PROCESSED_STOCK/);
 });
+
+test("WeighbridgeReconciler: allocates return invoices strictly FIFO by arrival sequence", () => {
+  const lots = [
+    { lotId: "LOT-03", arrivalSequence: 3, arrivedAt: "2025-09-12T10:00:00Z", remainingWeightKg: 20_000 },
+    { lotId: "LOT-01", arrivalSequence: 1, arrivedAt: "2025-09-10T08:00:00Z", remainingWeightKg: 15_000 },
+    { lotId: "LOT-02", arrivalSequence: 2, arrivedAt: "2025-09-11T09:00:00Z", remainingWeightKg: 25_000 },
+  ];
+
+  const allocations = WeighbridgeReconciler.allocateReturnFifo(lots, 32_000);
+
+  assert.equal(allocations.length, 2);
+  assert.equal(allocations[0].lotId, "LOT-01");
+  assert.equal(allocations[0].allocatedWeightKg, 15_000);
+  assert.equal(allocations[0].remainingAfterKg, 0);
+  assert.equal(allocations[1].lotId, "LOT-02");
+  assert.equal(allocations[1].allocatedWeightKg, 17_000);
+  assert.equal(allocations[1].remainingAfterKg, 8_000);
+
+  assert.throws(() => {
+    WeighbridgeReconciler.allocateReturnFifo(lots, 99_000);
+  }, /INSUFFICIENT_FIFO_BALANCE/);
+});
+
+test("WeighbridgeReconciler: reconciles bulk screening yield and flags excess process loss", () => {
+  const approved = WeighbridgeReconciler.reconcileScreeningYield(
+    [
+      { ticketId: "SCR-01", rawInputKg: 40_000, screenedPrimaryKg: 35_200, finesRecoveredKg: 4_500, occurredAt: "2025-09-13T10:00:00Z" },
+      { ticketId: "SCR-02", rawInputKg: 60_000, screenedPrimaryKg: 52_800, finesRecoveredKg: 6_700, occurredAt: "2025-09-13T14:00:00Z" },
+    ],
+    1.5
+  );
+
+  assert.equal(approved.totalRawInputKg, 100_000);
+  assert.equal(approved.unaccountedLossKg, 800);
+  assert.equal(approved.lossPercentage, 0.8);
+  assert.equal(approved.primaryYieldPercentage, 88);
+  assert.equal(approved.status, "APPROVED");
+
+  const flagged = WeighbridgeReconciler.reconcileScreeningYield(
+    [
+      { ticketId: "SCR-03", rawInputKg: 50_000, screenedPrimaryKg: 40_000, finesRecoveredKg: 7_500, occurredAt: "2025-09-14T10:00:00Z" },
+    ],
+    1.5
+  );
+  assert.equal(flagged.withinTolerance, false);
+  assert.equal(flagged.status, "FLAGGED_FOR_AUDIT");
+});

@@ -55,7 +55,9 @@ flowchart TD
 1. **Deterministic Scale Ticket Integrity:** Validates that $Net = Gross - Tare$ strictly within scale calibration variance ($\pm 1.0\text{ kg}$). Catches scale drift and operator tampering.
 2. **Tolerance-Bounded Batch Reconciliation:** Evaluates cumulative shipment tonnage against maritime manifests within contract tolerances (e.g. $\pm 0.5\%$). Automatically flags anomalous deliveries for manual survey audit.
 3. **Event-Sourced State Transitions:** Guarantees non-negative inventory balances through explicit state machine transitions (`PORT_RECEIPT` $\rightarrow$ `PROCESSING` $\rightarrow$ `DISPATCH_SALE`).
-4. **Zero Cold-Start Edge Execution:** Designed to execute within Cloudflare Workers sub-50ms latency profiles worldwide.
+4. **Automatic FIFO Return Allocation:** Allocates outbound and return invoice weights strictly by chronological weighbridge arrival sequence, guaranteeing zero over-allocation across warehouse lots.
+5. **Bulk Screening / Sieving Yield Reconciliation:** Validates raw bulk input against primary screened output and recovered fines, automatically flagging excess processing loss beyond configurable thresholds.
+6. **Zero Cold-Start Edge Execution:** Designed to execute within Cloudflare Workers sub-50ms latency profiles worldwide.
 
 ---
 
@@ -83,11 +85,13 @@ node --test dist/**/*.test.js
 
 *Test Output:*
 ```text
-✔ WeighbridgeReconciler: accurately approves batches within tolerance (0.63ms)
-✔ WeighbridgeReconciler: flags batches exceeding operational tolerance (0.16ms)
-✔ IndustrialInventoryLedger: enforces strict non-negative state transitions (0.39ms)
-ℹ tests 3
-ℹ pass 3
+✔ WeighbridgeReconciler: accurately approves batches within tolerance
+✔ WeighbridgeReconciler: flags batches exceeding operational tolerance
+✔ IndustrialInventoryLedger: enforces strict non-negative state transitions
+✔ WeighbridgeReconciler: allocates return invoices strictly FIFO by arrival sequence
+✔ WeighbridgeReconciler: reconciles bulk screening yield and flags excess process loss
+ℹ tests 5
+ℹ pass 5
 ℹ fail 0
 ```
 

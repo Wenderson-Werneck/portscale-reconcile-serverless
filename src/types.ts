@@ -41,3 +41,37 @@ export interface ReconciliationResult {
   status: "APPROVED" | "FLAGGED_FOR_AUDIT" | "REJECTED";
   ticketCount: number;
 }
+
+export interface InboundScaleLot {
+  lotId: string;
+  arrivalSequence: number;
+  arrivedAt: string;
+  remainingWeightKg: number;
+}
+
+export interface FifoReturnAllocation {
+  lotId: string;
+  arrivalSequence: number;
+  allocatedWeightKg: number;
+  remainingAfterKg: number;
+}
+
+export interface ScreeningTicket {
+  ticketId: string;
+  rawInputKg: number;
+  screenedPrimaryKg: number;
+  finesRecoveredKg: number;
+  occurredAt: string;
+}
+
+export interface ScreeningReconciliationResult {
+  ticketCount: number;
+  totalRawInputKg: number;
+  totalScreenedPrimaryKg: number;
+  totalFinesRecoveredKg: number;
+  unaccountedLossKg: number;
+  lossPercentage: number;
+  primaryYieldPercentage: number;
+  withinTolerance: boolean;
+  status: "APPROVED" | "FLAGGED_FOR_AUDIT";
+}
