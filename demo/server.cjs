@@ -30,12 +30,18 @@ const defaultScreening = [
   { ticketId: "SCR-402", rawInputKg: 58000, screenedPrimaryKg: 51120, finesRecoveredKg: 6410, occurredAt: "2026-11-17T14:20:00Z" },
 ];
 
+const MIME = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "application/javascript; charset=utf-8" };
+
 const server = http.createServer((req, res) => {
-  if (req.method === "GET" && (req.url === "/" || req.url === "/index.html")) {
-    const html = fs.readFileSync(path.join(__dirname, "index.html"), "utf8");
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
-    res.end(html);
-    return;
+  const urlPath = (req.url || "/").split("?")[0];
+  if (req.method === "GET" && (urlPath === "/" || urlPath === "/index.html" || urlPath === "/style.css")) {
+    const file = urlPath === "/" ? "/index.html" : urlPath;
+    const full = path.join(__dirname, file);
+    if (fs.existsSync(full)) {
+      res.writeHead(200, { "Content-Type": MIME[path.extname(full)] || "application/octet-stream" });
+      res.end(fs.readFileSync(full));
+      return;
+    }
   }
 
   if (req.method === "POST" && req.url === "/api/reconcile") {
