@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "test": "node --test dist/**/*.test.js || tsc && node --test",
-    "generate:data": "node scripts/generate-mock-data.js"
+    "generate:data": "node scripts/generate-mock-data.js",
+    "demo": "node demo/server.cjs"
   },
   "keywords": [
     "cloudflare-workers",

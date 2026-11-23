@@ -9,6 +9,21 @@
 
 ---
 
+## 🖥️ Interactive Visual Demo (1-Command Launch)
+
+![PortScale Reconcile Serverless — Live Demo Preview](docs/preview.png)
+
+Launch the full weighbridge reconciliation, FIFO allocation, and screening yield dashboard preloaded with **100% synthetic data** (zero external dependencies):
+
+```bash
+git clone https://github.com/Wenderson-Werneck/portscale-reconcile-serverless.git
+cd portscale-reconcile-serverless
+npm run demo
+# Open http://127.0.0.1:3001
+```
+
+---
+
 ## 📌 Executive Summary
 
 Industrial bulk logistics (alloys, grains, minerals, and chemicals) involves hundreds of truck scale dispatches per day between deepwater sea terminals and processing facilities. Discrepancies between **billed maritime manifests (Bills of Lading)** and **physical scale tickets** create severe inventory leakage, tax compliance penalties, and billing disputes.

@@ -9,12 +9,8 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "typeRoots": [
-      "C:/Users/Wenderson/Desktop/Projetos/Cometa_Expedicao_MVP/node_modules/@types",
-      "./node_modules/@types"
-    ]
+    "forceConsistentPlatformCasingInFileNames": true,
+    "declaration": true
   },
   "include": ["src/**/*"]
 }
